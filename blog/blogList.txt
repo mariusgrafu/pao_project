@@ -1,0 +1,28 @@
+actions:
+
+- create new user (v)
+- log in (v)
+- see all users (v)
+- see all roles (v)
+
+--- if logged in ---
+
+- log out (v)
+- create new role (v)
+- see list of articles (v)
+- read article (v)
+- write article (v)
+- comment on article (v)
+- list comments on article (v)
+- create poll (v)
+- vote on poll (v)
+
+- edit article (v)
+- change display name (v)
+
+- notify users when a new article is published (don't notify the author) (v)
+- notify author when another user replies to their article (v)
+- notify author when their poll gets voted on (v)
+- check notifications (v)
+
+- change preferences (v)

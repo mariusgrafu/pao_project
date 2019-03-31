@@ -1,4 +1,4 @@
-package blog;
+package src.blog.domain.entity;
 
 public class Preferences {
     private boolean compactView;
