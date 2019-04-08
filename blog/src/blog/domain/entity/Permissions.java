@@ -1,4 +1,4 @@
-package blog;
+package src.blog.domain.entity;
 
 public class Permissions {
     private boolean changeName;
@@ -11,6 +11,13 @@ public class Permissions {
         this.seeArticle = false;
         this.postArticle = false;
         this.editArticle = false;
+    }
+
+    public Permissions(boolean changeName, boolean seeArticle, boolean postArticle, boolean editArticle) {
+        this.changeName = changeName;
+        this.seeArticle = seeArticle;
+        this.postArticle = postArticle;
+        this.editArticle = editArticle;
     }
 
     public boolean getChangeName() {
@@ -43,5 +50,14 @@ public class Permissions {
 
     public void setEditArticle(boolean editArticle) {
         this.editArticle = editArticle;
+    }
+
+    @Override
+    public String toString() {
+        return "" +
+                "changeName : " + changeName +
+                ", seeArticle : " + seeArticle +
+                ", postArticle : " + postArticle +
+                ", editArticle : " + editArticle;
     }
 }

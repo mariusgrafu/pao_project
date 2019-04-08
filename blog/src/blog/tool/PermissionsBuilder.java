@@ -1,4 +1,6 @@
-package blog;
+package src.blog.tool;
+
+import src.blog.domain.entity.Permissions;
 
 public class PermissionsBuilder {
     private final Permissions target = new Permissions();
