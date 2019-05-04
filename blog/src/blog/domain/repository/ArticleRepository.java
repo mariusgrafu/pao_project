@@ -3,16 +3,14 @@ package src.blog.domain.repository;
 import src.blog.domain.entity.Article;
 import src.blog.domain.entity.PollArticle;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 public class ArticleRepository {
-    private ArrayList<Article> articles = new ArrayList<Article>();
-
-    private int lastId;
+    private Map<String, Article> articles = new HashMap<>();
 
     public Article findArticleByTitle (String title) {
-        for(Article article : articles) {
+        for(Map.Entry<String, Article> entry : articles.entrySet()) {
+            Article article = entry.getValue();
             if(article.getTitle().equals(title)) return article;
         }
         return null;
@@ -26,10 +24,11 @@ public class ArticleRepository {
             return null;
         }
 
-        newArticle.setId(lastId++);
+        String id = UUID.randomUUID().toString();
+        newArticle.setId(id);
         newArticle.setPostDate(new Date());
 
-        articles.add(newArticle);
+        articles.put(id, newArticle);
 
         return newArticle;
     }
@@ -42,29 +41,38 @@ public class ArticleRepository {
             return null;
         }
 
-        newArticle.setId(lastId++);
+        String id = UUID.randomUUID().toString();
+        newArticle.setId(id);
         newArticle.setPostDate(new Date());
 
-        articles.add(newArticle);
+        articles.put(id, newArticle);
 
         return newArticle;
     }
 
-    public ArrayList<Article> getAllArticles () {
+    public Map<String, Article> getAllArticles () {
         return articles;
     }
 
-    public Article getArticleById(int id) {
-        for(Article article : articles) {
-            if(article.getId() == id) return article;
+    public Article getArticleById(String id) {
+//        for(Map.Entry<String, Article> entry : articles.entrySet()) {
+//            Article article = entry.getValue();
+//            if(article.getId().equals(id)) return article;
+//        }
+        return articles.get(id);
+//        return null;
+    }
+
+    public Article getArticleByTitle(String title) {
+        for(Map.Entry<String, Article> entry : articles.entrySet()) {
+            Article article = entry.getValue();
+            if(article.getTitle().equals(title)) return article;
         }
         return null;
     }
 
-    public Article getArticleByTitle(String title) {
-        for(Article article : articles) {
-            if(article.getTitle().equals(title)) return article;
-        }
-        return null;
+    public Article loadArticle (Article newArticle) {
+        articles.put(newArticle.getId(), newArticle);
+        return newArticle;
     }
 }

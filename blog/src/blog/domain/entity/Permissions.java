@@ -52,6 +52,13 @@ public class Permissions {
         this.editArticle = editArticle;
     }
 
+    public String toCSV () {
+        return changeName +
+                "," + seeArticle +
+                "," + postArticle +
+                "," + editArticle;
+    }
+
     @Override
     public String toString() {
         return "" +

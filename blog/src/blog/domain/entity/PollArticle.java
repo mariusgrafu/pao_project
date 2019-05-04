@@ -1,6 +1,8 @@
 package src.blog.domain.entity;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class PollArticle extends Article {
     private ArrayList<PollOption> options = new ArrayList<PollOption>();
@@ -64,5 +66,27 @@ public class PollArticle extends Article {
         }
 
         return null;
+    }
+
+    public static Article getArticleFromCSV (String line) {
+        Article newArticle = Article.getArticleFromCSV(line);
+        PollArticle newPollArticle = new PollArticle(newArticle.getTitle(), newArticle.getContent(), newArticle.getAuthor());
+        newPollArticle.setPostDate(newArticle.getPostDate());
+        String[] values = line.split(",");
+        for(int i = 6; i < values.length; ++i) {
+            PollOption newPollOption = PollOption.getOptionFromCSV(values[i]);
+            newPollArticle.addNewOption(newPollOption);
+        }
+        return newPollArticle;
+    }
+
+    public String toCSV() {
+        StringBuilder optionsCSV = new StringBuilder();
+        for(int i = 0; i < options.size(); ++i) {
+            optionsCSV.append("," + options.get(i).toCSV());
+        }
+        return "1" + // 0 for simple article, 1 for poll
+                dataForCSV() +
+                optionsCSV;
     }
 }

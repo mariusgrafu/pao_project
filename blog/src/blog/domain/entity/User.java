@@ -1,10 +1,13 @@
 package src.blog.domain.entity;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class User {
-    private int id;
+    private String id;
     private String username;
     private String password;
 
@@ -19,6 +22,8 @@ public class User {
 
     private ArrayList<Notification> notifications = new ArrayList<Notification>();
 
+    private static final DateFormat date_format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
     public User(String username, String password, String displayName, String email, Role role, Date registerDate, Preferences preferences) {
         this.username = username;
         this.password = password;
@@ -27,6 +32,27 @@ public class User {
         this.role = role;
         this.registerDate = registerDate;
         this.preferences = preferences;
+    }
+
+    public static User getUserFromCSV (String line) {
+        String[] values = line.split(",");
+
+        String id = values[0];
+        String username = values[1];
+        String password = values[2];
+        String displayName = values[4];
+        String email = values[5];
+        Date registerDate = null;
+        try {
+            registerDate = date_format.parse(values[6]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            registerDate = new Date();
+        }
+
+        User newUser = new User(username, password, displayName, email, null, registerDate, new Preferences());
+        newUser.setId(id);
+        return newUser;
     }
 
     public User(String username, String password, String email, Role role) {
@@ -48,11 +74,11 @@ public class User {
         this.preferences = new Preferences();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -146,10 +172,21 @@ public class User {
         return role.isStaff();
     }
 
+    public String toCSV() {
+        return  id +
+                "," + username +
+                "," + password +
+                "," + role.getId() +
+                "," + displayName +
+                "," + email +
+                "," + date_format.format(registerDate);
+    }
+
     @Override
     public String toString() {
         return "" +
-                "[" + id + "] " + displayName + ' ' +
+//                "[" + id + "] " +
+                displayName + ' ' +
                 "(" + role.getTitle() + ") ";
     }
 
