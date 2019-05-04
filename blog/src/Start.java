@@ -7,7 +7,7 @@ public class Start {
 
     public static void main(String[] args) {
 
-        System.out.println("This aims to be a blog");
+        System.out.println("This aims to be a blog 🙈");
 
         BlogService blogService = BlogService.getInstance("Marius", "asd", "marius@email.com");
 
@@ -59,6 +59,7 @@ public class Start {
             switch (option) {
                 case "0": // quick exit
                 case "exit": // Exit
+                    blogService.save();
                     run = false;
                     break;
                 case "create new user": // Create New User
@@ -212,10 +213,10 @@ public class Start {
                                 }
                                 break;
                             case "select article":
-                                System.out.println("article title or id: ");
+                                System.out.println("article title: ");
                                 String artName = scanner.nextLine();
 
-                                Article selectedArticle = blogService.getArticleByTitleOrId(artName);
+                                Article selectedArticle = blogService.getArticleByTitle(artName);
 
                                 if(selectedArticle != null) {
                                     boolean articleRun = true;
