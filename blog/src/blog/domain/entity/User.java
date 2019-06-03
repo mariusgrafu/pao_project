@@ -1,5 +1,6 @@
 package src.blog.domain.entity;
 
+import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -52,6 +53,29 @@ public class User {
 
         User newUser = new User(username, password, displayName, email, null, registerDate, new Preferences());
         newUser.setId(id);
+        return newUser;
+    }
+
+    public String getStringRegisterDate() {
+        return date_format.format(registerDate);
+    }
+
+    public static User getUserFromResultSet (ResultSet resultSet) {
+        User newUser = null;
+        try {
+            String id = resultSet.getString("id");
+            String username = resultSet.getString("username");
+            String password = resultSet.getString("password");
+            String displayName = resultSet.getString("displayName");
+            String email = resultSet.getString("email");
+            Date registerDate = date_format.parse(resultSet.getString("registerDate"));
+
+            newUser = new User(username, password, displayName, email, null, registerDate, new Preferences());
+            newUser.setId(id);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
         return newUser;
     }
 

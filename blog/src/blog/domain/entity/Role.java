@@ -1,5 +1,6 @@
 package src.blog.domain.entity;
 
+import java.sql.ResultSet;
 import java.util.Objects;
 
 public class Role {
@@ -30,6 +31,20 @@ public class Role {
                 Boolean.parseBoolean(values[7])
         ), isDefault, isStaff);
         newRole.setId(values[0]);
+        return newRole;
+    }
+
+    public static Role getRoleFromResultSet (ResultSet resultSet) throws Exception {
+        String title = resultSet.getString("title");
+        boolean isDefault = resultSet.getBoolean("defaultRole");
+        boolean isStaff = resultSet.getBoolean("staff");
+        Role newRole = new Role(title, new Permissions(
+                resultSet.getBoolean("can_changeName"),
+                resultSet.getBoolean("can_seeArticle"),
+                resultSet.getBoolean("can_postArticle"),
+                resultSet.getBoolean("can_editArticle")
+        ), isDefault, isStaff);
+        newRole.setId(resultSet.getString("id"));
         return newRole;
     }
 
@@ -97,12 +112,14 @@ public class Role {
 
     @Override
     public String toString() {
-        return
-//                "[" + id + "] " +
-                        title +
-                " [" + permissions + "]" +
-                " [default role = " + defaultRole + "]" +
-                " [staff = " + staff + ']';
+        StringBuilder r = new StringBuilder(title);
+        if(staff) r.append(" [staff]");
+        return r.toString();
+////                "[" + id + "] " +
+//                        title +
+////                " [" + permissions + "]" +
+//                " [default role = " + defaultRole + "]" +
+//                " [staff = " + staff + ']';
     }
 
     @Override

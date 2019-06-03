@@ -1,5 +1,6 @@
 package src.blog.domain.entity;
 
+import java.sql.ResultSet;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,6 +72,14 @@ public class Article {
         this.postDate = postDate;
     }
 
+    public String getStringPostDate() {
+        return date_format.format(postDate);
+    }
+
+    public Map<Date, Comment> getCommentsMap () {
+        return comments;
+    }
+
     public static Article getArticleFromCSV (String line) {
         String[] values = line.split(",");
         String id = values[1];
@@ -83,6 +92,19 @@ public class Article {
             postDate = new Date();
             e.printStackTrace();
         }
+
+        Article newArticle = new Article(title, content, null);
+        newArticle.setId(id);
+        newArticle.setPostDate(postDate);
+
+        return newArticle;
+    }
+
+    public static Article getArticleFromResultSet (ResultSet resultSet) throws Exception {
+        String id = resultSet.getString("id");
+        String title = resultSet.getString("title");
+        String content = resultSet.getString("content");
+        Date postDate = date_format.parse(resultSet.getString("postDate"));
 
         Article newArticle = new Article(title, content, null);
         newArticle.setId(id);
