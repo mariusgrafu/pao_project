@@ -1,5 +1,6 @@
 package src.blog.domain.entity;
 
+import java.sql.ResultSet;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,7 +31,7 @@ public class PollArticle extends Article {
     public PollOption addNewOption (PollOption newPollOption) {
         PollOption optionWithSameName = getPollOptionByTitle(newPollOption.getTitle());
         if(optionWithSameName != null) {
-            System.out.println("There's already an option with this title!");
+//            System.out.println("There's already an option with this title!");
             return null;
         }
 
@@ -59,7 +60,7 @@ public class PollArticle extends Article {
             return null;
         }
         if(options.get(id).addVote(voter)) {
-            if(voter.getId() != this.getAuthor().getId()) {
+            if(!voter.getId().equals(this.getAuthor().getId())) {
                 this.getAuthor().addNotification(new Notification("New Vote!"));
             }
             return options.get(id);
@@ -80,11 +81,30 @@ public class PollArticle extends Article {
         return newPollArticle;
     }
 
-    public String toCSV() {
+    public static Article getArticleFromResultSet (ResultSet resultSet) throws Exception {
+        Article newArticle = Article.getArticleFromResultSet(resultSet);
+        PollArticle newPollArticle = new PollArticle(newArticle.getTitle(), newArticle.getContent(), newArticle.getAuthor());
+        newPollArticle.setPostDate(newArticle.getPostDate());
+        newPollArticle.setId(newArticle.getId());
+        String[] values = resultSet.getString("optionsCSV").split(",");
+        for(int i = 0; i < values.length; ++i) {
+            PollOption newPollOption = PollOption.getOptionFromCSV(values[i]);
+            newPollArticle.addNewOption(newPollOption);
+        }
+        return newPollArticle;
+    }
+
+    public String optionsToCSV () {
         StringBuilder optionsCSV = new StringBuilder();
         for(int i = 0; i < options.size(); ++i) {
             optionsCSV.append("," + options.get(i).toCSV());
         }
+
+        return optionsCSV.toString();
+    }
+
+    public String toCSV() {
+        String optionsCSV = optionsToCSV();
         return "1" + // 0 for simple article, 1 for poll
                 dataForCSV() +
                 optionsCSV;
